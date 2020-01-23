@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Станислав Кондрашов](https://up.htmlacademy.ru/javascript/19/user/207684).
-* Наставник: `Неизвестно`.
+* Наставник: [Яна  Казанина](https://htmlacademy.ru/profile/id1275245).
 
 ---
 
