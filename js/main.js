@@ -11,7 +11,6 @@ var minValue = 0;
 var maxValueX = 1200;
 var maxValueY = 630;
 var minValueY = 130;
-var maxValue = 8;
 var widthPin = 25;
 var heightPin = 70;
 
@@ -20,8 +19,8 @@ var avatars = [];
 
 // генерация случайного индекса (убрал + 1)
 function getRandomValue(min, max) {
-  var minValue = min ? min : 0;
-  return minValue + Math.floor(Math.random() * (max - minValue));
+  var startValue = min ? min : 0;
+  return startValue + Math.floor(Math.random() * (max - startValue));
 }
 
 // генерация рандомного массива (убрал - 1)
