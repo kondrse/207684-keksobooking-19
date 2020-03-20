@@ -1,15 +1,16 @@
 'use strict';
 
 (function () {
-  var Url = {
-    get: 'https://js.dump.academy/keksobooking/data',
-    post: 'https://js.dump.academy/keksobooking'
-  };
 
   var TIMEOUT = 10000;
   var METHOD_LOAD = 'GET';
   var METHOD_SAVE = 'POST';
   var SUCCESS_CODE = 200;
+
+  var Url = {
+    get: 'https://js.dump.academy/keksobooking/data',
+    post: 'https://js.dump.academy/keksobooking'
+  };
 
   var sendXMLHttpRequest = function (url, method, data, loadHandler, errorHandler) {
     var xhr = new XMLHttpRequest();

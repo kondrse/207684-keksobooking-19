@@ -8,7 +8,6 @@
   var MAIN_PIN_HEIGHT = 65;
   var addFormButton = document.querySelector('.ad-form__submit');
   var resetFormButton = document.querySelector('.ad-form__reset');
-  // var ENTER_KEY = 'Enter';
   var ESCAPE_KAY = 'Escape';
 
   // Импорт данных из других модулей
@@ -48,7 +47,7 @@
     var errorClone = errorTemplate.cloneNode(true);
     var fragment = document.createDocumentFragment();
 
-    errorClone.querySelector('.error__message').innerHTML = msg;
+    errorClone.querySelector('.error__message').textContent = msg;
     fragment.appendChild(errorClone);
     main.appendChild(fragment);
 
@@ -65,7 +64,6 @@
     main.appendChild(fragment);
     // Закрытие окна
     document.querySelector('.success').addEventListener('click', closeMessage('.success'));
-    // window.addEventListener('click', closeMessage('.success'));
     document.addEventListener('keydown', function (evt) {
       if (evt.key === ESCAPE_KAY) {
         closeMessage('.success');
@@ -107,7 +105,6 @@
       window.map.onActivePin();
       window.activeMode.isActivePage = true;
       window.form.onSelectRoom();
-      // window.serverRequest.onSuccesLoad('https://js.dump.academy/keksobooking', showSuccessMessage, showErrorMessage);
       return;
     }
   }

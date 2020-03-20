@@ -36,17 +36,9 @@
     });
   }
 
-  // function updatePins() {
-  //   console.log('Обновила объявления + удалила предыдущие + удалила карточку');
-  //   deletePins();
-  //   window.card.removeCard();
-  //   window.filter.filterByData(window.serverRequest.posters);
-  // }
-
   // Экспорт функций модуля
   window.pins = {
     addPinsToDom: addPinsToDom,
     deletePins: deletePins
-    // updatePins: updatePins
   };
 })();

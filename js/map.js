@@ -20,7 +20,6 @@
     max: 630
   };
 
-  // var map = document.querySelector('.map');
   var mainPin = document.querySelector('.map__pin--main');
 
   function onActivePin() {

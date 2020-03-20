@@ -6,19 +6,19 @@
   var filterPosters = [];
 
   var Price = {
-    min: 10000,
-    max: 50000
+    MIN: 10000,
+    MAX: 50000
   };
 
   var rangePrice = {
     low: function (price) {
-      return price < Price.min;
+      return price < Price.MIN;
     },
     middle: function (price) {
-      return price <= Price.max && price >= Price.min;
+      return price <= Price.MAX && price >= Price.MIN;
     },
     high: function (price) {
-      return price > Price.max;
+      return price > Price.MAX;
     }
   };
 
