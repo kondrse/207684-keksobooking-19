@@ -9,7 +9,6 @@
   // генерируем клон из шаблона
   function renderPin(pin) {
     var pinClone = pinTemplate.cloneNode(true);
-
     pinClone.style = 'left: ' + (pin.location.x - (WIDTH_PIN / 2)) + 'px; top: ' + (pin.location.y - HEIGHT_PIN) + 'px;';
     pinClone.querySelector('img').src = pin.author.avatar;
     pinClone.querySelector('img').alt = pin.offer.title;
@@ -22,7 +21,7 @@
 
   // добавляем объявление в разметку
   function addPinsToDom(posters) {
-    for (var i = 0; i < posters.length && i < 5; i++) {
+    for (var i = 0; i < posters.length; i++) {
       fragment.appendChild(renderPin(posters[i]));
     }
     mapPinsWrapper.appendChild(fragment);
@@ -38,7 +37,7 @@
 
   // Экспорт функций модуля
   window.pins = {
-    addPinsToDom: addPinsToDom,
-    deletePins: deletePins
+    addToDom: addPinsToDom,
+    delete: deletePins
   };
 })();

@@ -4,11 +4,14 @@
 
   var MAIN_PIN_POINTER_HEIGHT = 10;
   var MAIN_PIN_POINTER_WIDTH = 22;
-  var MAIN_PIN_WIDTH = 65;
-  var MAIN_PIN_HEIGHT = 65;
+  var MAIN_PIN_WIDTH = 62;
+  var MAIN_PIN_HEIGHT = 62;
   var addFormButton = document.querySelector('.ad-form__submit');
   var resetFormButton = document.querySelector('.ad-form__reset');
-  var ESCAPE_KAY = 'Escape';
+  var errorButton = document.querySelector('.error__button');
+  var ESCAPE_KEY = 'Escape';
+  var ENTER_KEY = 'Enter';
+  var TIME_OUT = 2000;
 
   // Импорт данных из других модулей
   var addressInput = window.inactiveMode.addressInput;
@@ -22,24 +25,48 @@
 
   var isActivePage = false;
 
-  //  меняю адрес исходя из полуенных цифр
-  var changeAddressValue = function (left, top) {
+  //  меняю адрес, исходя из полуенных цифр
+  function changeAddressValue(left, top) {
     addressInput.value = left + ', ' + top;
-  };
+  }
 
-  function closeMessage(msg) {
-    document.addEventListener('click', function (evt) {
+  function closeMessage(type) {
+    document.querySelector(type).removeEventListener('click', closeMessageOnClick);
+    window.removeEventListener('keydown', closeMessageOnKeyDown);
+    document.querySelector(type).remove();
+    window.form.onBlockPage();
+  }
 
-      if (evt.target !== document.querySelector(msg + '__message')) {
-        document.querySelector(msg).remove();
+  function closeMessageOnClick(evt) {
+    var error = document.querySelector('.error');
+    var success = document.querySelector('.success');
+
+    if (document.querySelector('main').lastChild === error) {
+      if (evt.currentTarget === errorButton || evt.target !== document.querySelector('.error__message')) {
+        closeMessage('.error');
       }
-    });
+    }
 
-    window.addEventListener('keydown', function (evt) {
-      if (evt.key === ESCAPE_KAY) {
-        document.querySelector(msg).remove();
+    if (document.querySelector('main').lastChild === success) {
+      if (evt.target !== document.querySelector('.success__message')) {
+        closeMessage('.success');
       }
-    });
+    }
+  }
+
+  function closeMessageOnKeyDown(evt) {
+    var error = document.querySelector('.error');
+    var success = document.querySelector('.success');
+
+    if (evt.key === ESCAPE_KEY) {
+      if (document.querySelector('main').lastChild === error) {
+        closeMessage('.error');
+      }
+
+      if (document.querySelector('main').lastChild === success) {
+        closeMessage('.success');
+      }
+    }
   }
 
   // появление окна с ошибкой
@@ -47,12 +74,13 @@
     var errorClone = errorTemplate.cloneNode(true);
     var fragment = document.createDocumentFragment();
 
-    errorClone.querySelector('.error__message').textContent = msg;
+    errorClone.querySelector('.error__message').innerHTML = msg;
     fragment.appendChild(errorClone);
     main.appendChild(fragment);
 
 
-    setTimeout(document.addEventListener('click', closeMessage('.error')), 2000);
+    setTimeout(document.querySelector('.error').addEventListener('click', closeMessageOnClick), TIME_OUT);
+    setTimeout(window.addEventListener('keydown', closeMessageOnKeyDown), TIME_OUT);
   }
 
   // появление "успешного окна"
@@ -63,12 +91,8 @@
     fragment.appendChild(successClone);
     main.appendChild(fragment);
     // Закрытие окна
-    document.querySelector('.success').addEventListener('click', closeMessage('.success'));
-    document.addEventListener('keydown', function (evt) {
-      if (evt.key === ESCAPE_KAY) {
-        closeMessage('.success');
-      }
-    });
+    document.querySelector('.success').addEventListener('click', closeMessageOnClick);
+    window.addEventListener('keydown', closeMessageOnKeyDown);
   }
 
   function onDisable(list, value) {
@@ -101,31 +125,33 @@
 
       changeAddressValue(mainPinLeft, mainPinTop);
 
-      window.serverRequest.loadData(window.filter.filterByData, showErrorMessage);
+      window.serverRequest.loadData(window.filter.update, showErrorMessage);
       window.map.onActivePin();
       window.activeMode.isActivePage = true;
       window.form.onSelectRoom();
+      window.form.onSelectType();
       return;
     }
   }
 
-  mainPin.addEventListener('mousedown', changeOnActiveMode);
-  mainPin.addEventListener('keydown', function (evt) {
-    if (evt.which === 1) {
-      window.activeMode.changeOnActiveMode();
+  function onActivate(evt) {
+    if (evt.key === ENTER_KEY || evt.which === 1) {
+      mainPin.removeEventListener('keydown', onActivate);
+      changeOnActiveMode();
     }
-  });
+  }
+
+  mainPin.addEventListener('keydown', onActivate);
+
+  mainPin.addEventListener('mousedown', onActivate);
 
 
   // Экспорт функций модуля
   window.activeMode = {
-    changeOnActiveMode: changeOnActiveMode,
-    mainPin: mainPin,
     MAIN_PIN_WIDTH: MAIN_PIN_WIDTH,
     MAIN_PIN_HEIGHT: MAIN_PIN_HEIGHT,
     MAIN_PIN_POINTER_WIDTH: MAIN_PIN_POINTER_WIDTH,
     MAIN_PIN_POINTER_HEIGHT: MAIN_PIN_POINTER_HEIGHT,
-    addressInput: addressInput,
     changeAddressValue: changeAddressValue,
     isActivePage: isActivePage,
     onDisable: onDisable,

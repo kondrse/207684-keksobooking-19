@@ -28,16 +28,21 @@
     }
   ];
 
+  var photoParameters = {
+    width: 45,
+    height: 40
+  };
+
   // поиск нужного типа аппартаментов
   function findTypeOfHouse(type) {
     var translate;
 
-    apartmentsList.forEach(function (element) {
-
-      if (element.type === type) {
-        translate = element.translate;
+    for (var i = 0; i < apartmentsList.length; i++) {
+      if (apartmentsList[i].type === type) {
+        translate = apartmentsList[i].translate;
+        break;
       }
-    });
+    }
     return translate;
   }
 
@@ -62,8 +67,8 @@
       var featureElement = document.createElement('img');
       featureElement.classList.add('popup__photo');
       featureElement.src = array[i];
-      featureElement.width = 45;
-      featureElement.height = 40;
+      featureElement.width = photoParameters.width;
+      featureElement.height = photoParameters.height;
       newFragment.appendChild(featureElement);
     }
     return newFragment;
@@ -88,49 +93,70 @@
     cardClone.querySelector('.popup__description').textContent = poster.offer.description;
     return cardClone;
   }
+  var allPins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+
 
   var map = document.querySelector('.map');
   var mapFilter = document.querySelector('map__filters-container');
+
+  // удаление стиля активной метки
+  function remoteActivePin() {
+    allPins.forEach(function (element) {
+      element.classList.remove('map__pin--active');
+    });
+  }
 
   // удаление карточки
   function removeCard() {
     var cardOnMap = map.querySelector('.map__card');
     if (cardOnMap) {
       cardOnMap.remove();
+      remoteActivePin();
     }
   }
 
   function addCardToPin(posters) {
     var cardToPin = document.createDocumentFragment();
-    var allPins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+    allPins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
     var newPin;
     var btnClose;
+    var activePin;
 
-    function cardCloseEvents() {
-      btnClose.addEventListener('click', function () {
+    function onClickCard() {
+      btnClose.removeEventListener('click', onClickCard);
+      newPin.remove();
+      remoteActivePin();
+    }
+
+    function onKeyDownCard(evt) {
+
+      if (evt.key === ESC_KEY) {
+        document.removeEventListener('keydown', onKeyDownCard);
         newPin.remove();
-      });
-
-      document.addEventListener('keydown', function (evt) {
-        if (evt.key === ESC_KEY) {
-          newPin.remove();
-        }
-      });
+        remoteActivePin();
+      }
     }
 
     posters.forEach(function (pin, index) {
       allPins[index].addEventListener('click', function () {
         // проверка на наличие уже открытых карточек
         var cardOnMap = document.querySelector('.map__card');
+        activePin = document.querySelector('.map__pin--active');
 
         if (cardOnMap) {
           cardOnMap.remove();
+          activePin.classList.remove('map__pin--active');
         }
+
+        allPins[index].classList.add('map__pin--active');
+
         newPin = cardToPin.appendChild(renderCard(pin));
         btnClose = newPin.querySelector('.popup__close');
         map.insertBefore(newPin, mapFilter);
 
-        cardCloseEvents();
+        btnClose.addEventListener('click', onClickCard);
+
+        document.addEventListener('keydown', onKeyDownCard);
       });
     });
   }
@@ -138,8 +164,7 @@
   // Экспорт функций модуля
   window.card = {
     apartmentsList: apartmentsList,
-    renderCard: renderCard,
-    addCardToPin: addCardToPin,
-    removeCard: removeCard
+    addToPin: addCardToPin,
+    remove: removeCard
   };
 })();

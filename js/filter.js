@@ -1,100 +1,107 @@
 'use strict';
 
 (function () {
+
   var allFilters = document.querySelector('.map__filters');
+  var housingType = allFilters.elements['housing-type'];
+  var housingPrice = allFilters.elements['housing-price'];
+  var housingRooms = allFilters.elements['housing-rooms'];
+  var housingGuests = allFilters.elements['housing-guests'];
+  var housingFeatures = allFilters.querySelector('#housing-features');
 
-  var filterPosters = [];
-
-  var Price = {
-    MIN: 10000,
-    MAX: 50000
+  var priceTypeToRange = {
+    low: {min: 0, max: 10000},
+    middle: {min: 10000, max: 50000},
+    high: {min: 50000, max: Number.MAX_VALUE},
   };
 
-  var rangePrice = {
-    low: function (price) {
-      return price < Price.MIN;
-    },
-    middle: function (price) {
-      return price <= Price.MAX && price >= Price.MIN;
-    },
-    high: function (price) {
-      return price > Price.MAX;
-    }
+  var Count = {
+    MIN: 0,
+    MAX: 5
   };
 
-  // фильтрация объявлений по выбранному значению в фильтре
-  function filterByValue(dataList, filter, checkValue) {
-    return dataList.filter(function (data) {
-      return data.offer[filter].toString() === checkValue;
-    });
+  function isAny(value) {
+    return value === 'any';
   }
 
-  function filterByPrice(dataList, checkValue) {
-    return dataList.filter(function (data) {
-      return rangePrice[checkValue](data.offer.price);
-    });
+  function isEqual(data, value) {
+    return data === value;
   }
 
-  function filterByFeatures(dataList, checkValue) {
-    return dataList.filter(function (data) {
-      return data.offer.features.includes(checkValue);
-    });
+  function isType(data, value) {
+    return isAny(value) || isEqual(data, value);
   }
 
-  function filterByData(data) {
+  function isNumber(data, value) {
+    return isAny(value) || isEqual(data, parseInt(value, 10));
+  }
 
-    var filterSelectList = document.querySelector('.map__filters').querySelectorAll('select');
-    var featuresList = document.querySelector('#housing-features').querySelectorAll('input[type="checkbox"]:checked');
+  function isPrice(data, value) {
+    return isAny(value) || (data >= priceTypeToRange[value].min && data < priceTypeToRange[value].max);
+  }
 
-    filterSelectList = Array.from(filterSelectList).filter(function (item) {
-      return item.value !== 'any';
-    });
+  function isFeatures(data, features) {
+    var is = true;
 
-    filterPosters = data;
-    var newFilterList = filterPosters.slice();
-
-    filterSelectList.forEach(function (filter) {
-      switch (filter.id) {
-        case 'housing-type':
-          newFilterList = filterByValue(newFilterList, 'type', filter.value);
-          break;
-        case 'housing-price':
-          newFilterList = filterByPrice(newFilterList, filter.value);
-          break;
-        case 'housing-rooms':
-          newFilterList = filterByValue(newFilterList, 'rooms', filter.value);
-          break;
-        case 'housing-guests':
-          newFilterList = filterByValue(newFilterList, 'guests', filter.value);
-          break;
+    for (var i = 0; i < features.length; i++) {
+      var element = features[i];
+      if (!element.checked) {
+        continue;
       }
-    });
 
-    featuresList.forEach(function (feature) {
-      newFilterList = filterByFeatures(newFilterList, feature.value);
-    });
+      is = data.some(function (feature) {
+        return feature === element.value;
+      });
+
+      if (!is) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  function isOffer(data) {
+    return !!data.offer;
+  }
+
+  function filter(pins) {
+    window.filter.posters = pins;
+
+    var posters = []; // в этот массив будем собирать элементы, подходящие под фильтрацию
 
 
-    window.pins.addPinsToDom(newFilterList.slice(0, 5));
-    window.card.addCardToPin(newFilterList.slice(0, 5));
-
-    return newFilterList;
+    for (var i = Count.MIN; i < pins.length; i++) {
+      var pin = pins[i];
+      if (isType(pin.offer.type, housingType.value)
+        && isPrice(pin.offer.price, housingPrice.value)
+        && isNumber(pin.offer.rooms, housingRooms.value)
+        && isNumber(pin.offer.guests, housingGuests.value)
+        && isFeatures(pin.offer.features, housingFeatures.elements)
+        && isOffer(pin)) {
+        posters.push(pins[i]);
+      }
+      // если в новом массиве уже 5 элементов
+      if (posters.length === Count.MAX) {
+        break;
+      }
+    }
+    window.pins.addToDom(posters);
+    window.card.addToPin(posters);
+    return posters;
   }
 
   function updateFilter() {
-    window.pins.deletePins();
-    window.card.removeCard();
-    filterByData(filterPosters);
+    window.pins.delete();
+    window.card.remove();
+    filter(window.filter.posters);
   }
 
-  var updateFillterHandler = window.optimization.debaunce(updateFilter);
+  var changeFilter = window.optimization.debaunce(updateFilter);
 
-  allFilters.addEventListener('change', updateFillterHandler);
+  allFilters.addEventListener('change', changeFilter);
 
-
-  // Экспорт функций модуля
   window.filter = {
-    filterByData: filterByData,
-    filterPosters: filterPosters
+    update: filter
   };
 })();
