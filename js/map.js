@@ -16,7 +16,7 @@
   };
 
   var YCoordinate = {
-    MIN: 46,
+    MIN: 45,
     MAX: 546
   };
 
