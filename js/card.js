@@ -4,7 +4,6 @@
 
   var ESC_KEY = 'Escape';
   var cardTemplate = document.querySelector('#card').content.querySelector('.popup');
-
   var apartmentsList = [
     {
       type: 'flat',

@@ -74,10 +74,9 @@
     var errorClone = errorTemplate.cloneNode(true);
     var fragment = document.createDocumentFragment();
 
-    errorClone.querySelector('.error__message').innerHTML = msg;
+    errorClone.querySelector('.error__message').textContent = msg;
     fragment.appendChild(errorClone);
     main.appendChild(fragment);
-
 
     setTimeout(document.querySelector('.error').addEventListener('click', closeMessageOnClick), TIME_OUT);
     setTimeout(window.addEventListener('keydown', closeMessageOnKeyDown), TIME_OUT);
