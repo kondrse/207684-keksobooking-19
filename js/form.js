@@ -20,9 +20,9 @@
   var addFormButton = document.querySelector('.ad-form__submit');
   var resetFormButton = document.querySelector('.ad-form__reset');
 
-  var defaultCoords = {
-    x: 570,
-    y: 375
+  var DefaultCoordinate = {
+    X: 570,
+    Y: 375
   };
 
   var inputs = form.querySelectorAll('input');
@@ -89,8 +89,8 @@
     window.pins.delete();
     window.card.remove();
     window.inactiveMode.disabledAllFildset();
-    window.inactiveMode.mainPin.style.left = defaultCoords.x + 'px';
-    window.inactiveMode.mainPin.style.top = defaultCoords.y + 'px';
+    window.inactiveMode.mainPin.style.left = DefaultCoordinate.X + 'px';
+    window.inactiveMode.mainPin.style.top = DefaultCoordinate.Y + 'px';
     window.activeMode.onDisable(document.querySelectorAll('.map__filter'), true);
     window.activeMode.onDisable(document.querySelectorAll('.map__checkbox'), true);
     window.activeMode.changeCursor(document.querySelectorAll('.map__filter'), 'default');
