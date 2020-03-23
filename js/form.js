@@ -122,7 +122,7 @@
     addFormButtonElement.removeEventListener('click', onCheckValidityClick);
   }
 
-  function onsubmitDataToServer(evt) {
+  function onSubmitDataToServer(evt) {
     evt.preventDefault();
     window.serverRequest.postData(new FormData(formElement), window.activeMode.showSuccessMessage, window.activeMode.showErrorMessage);
     onBlockPage();
@@ -135,7 +135,7 @@
   });
   resetFormButtonElement.addEventListener('click', onBlockPage);
   addFormButtonElement.addEventListener('click', onCheckValidityClick);
-  formElement.addEventListener('submit', onsubmitDataToServer);
+  formElement.addEventListener('submit', onSubmitDataToServer);
 
   // Экспорт функций модуля
   window.formElement = {
