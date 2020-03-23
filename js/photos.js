@@ -2,11 +2,11 @@
 
 (function () {
   var FILE_TYPES = ['gif', 'jpg', 'jpeg', 'png'];
-  var avatarChooser = document.querySelector('.ad-form-header__upload').querySelector('input[type=file]');
-  var avatarPreview = document.querySelector('.ad-form-header__preview img');
+  var avatarChooserElement = document.querySelector('.ad-form-header__upload').querySelector('input[type=file]');
+  var avatarPreviewElement = document.querySelector('.ad-form-header__preview img');
 
-  var photoApartmentsChooser = document.querySelector('.ad-form__upload').querySelector('input[type=file]');
-  var photoApartmentsPreview = document.querySelector('.ad-form__photo');
+  var photoApartmentsChooserElement = document.querySelector('.ad-form__upload').querySelector('input[type=file]');
+  var photoApartmentsPreviewElement = document.querySelector('.ad-form__photo');
   var PhotoPreviewSize = {
     WIDTH: 40,
     HEIGHT: 40
@@ -24,7 +24,7 @@
     photo.width = PhotoPreviewSize.WIDTH;
     photo.height = PhotoPreviewSize.HEIGHT;
     photo.alt = 'Фото жилья';
-    photoApartmentsPreview.appendChild(photo);
+    photoApartmentsPreviewElement.appendChild(photo);
 
     return photo;
   }
@@ -57,15 +57,15 @@
   }
 
   function onChangeAvatar() {
-    addPhoto(avatarChooser, avatarPreview);
+    addPhoto(avatarChooserElement, avatarPreviewElement);
   }
 
   function onChangePhoto() {
-    addPhoto(photoApartmentsChooser, generatePhoto());
+    addPhoto(photoApartmentsChooserElement, generatePhoto());
   }
 
-  avatarChooser.addEventListener('change', onChangeAvatar);
-  photoApartmentsChooser.addEventListener('change', onChangePhoto);
+  avatarChooserElement.addEventListener('change', onChangeAvatar);
+  photoApartmentsChooserElement.addEventListener('change', onChangePhoto);
 
   // Экспорт функций модуля
   window.photos = {

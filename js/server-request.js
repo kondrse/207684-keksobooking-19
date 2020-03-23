@@ -18,7 +18,7 @@
       if (xhr.status === SUCCESS_CODE) {
         loadHandler(xhr.response);
         if (data) {
-          window.form.onBlockPage();
+          window.formElement.onBlockPage();
         }
       } else {
         errorHandler('Cтатус ответа: ' + xhr.status + ' ' + xhr.statusText);

@@ -2,12 +2,12 @@
 
 (function () {
 
-  var allFilters = document.querySelector('.map__filters');
-  var housingType = allFilters.elements['housing-type'];
-  var housingPrice = allFilters.elements['housing-price'];
-  var housingRooms = allFilters.elements['housing-rooms'];
-  var housingGuests = allFilters.elements['housing-guests'];
-  var housingFeatures = allFilters.querySelector('#housing-features');
+  var allFilterElement = document.querySelector('.map__filters');
+  var housingType = allFilterElement.elements['housing-type'];
+  var housingPrice = allFilterElement.elements['housing-price'];
+  var housingRooms = allFilterElement.elements['housing-rooms'];
+  var housingGuests = allFilterElement.elements['housing-guests'];
+  var housingFeatures = allFilterElement.querySelector('#housing-features');
 
   var priceTypeToRange = {
     low: {min: 0, max: 10000},
@@ -99,7 +99,7 @@
 
   var changeFilter = window.optimization.debaunce(updateFilter);
 
-  allFilters.addEventListener('change', changeFilter);
+  allFilterElement.addEventListener('change', changeFilter);
 
   window.filter = {
     update: filter

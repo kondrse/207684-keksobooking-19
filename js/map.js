@@ -2,12 +2,12 @@
 
 (function () {
 
-  var mapCoordinates = {
-    width: document.querySelector('.map').clientWidth,
-    height: document.querySelector('.map').clientHeight
+  var MapCoordinate = {
+    WIDTH: document.querySelector('.map').clientWidth,
+    HEIGHT: document.querySelector('.map').clientHeight
   };
 
-  var MainPinCoordinates = {
+  var MainPinCoordinate = {
     WIDTH: 62,
     HEIGHT: 62,
     // длина и высота кончика метки
@@ -22,18 +22,18 @@
 
   var XCoordinate = {
     MIN: -(window.activeMode.MAIN_PIN_WIDTH / 2),
-    MAX: mapCoordinates.width - (window.activeMode.MAIN_PIN_WIDTH / 2)
+    MAX: MapCoordinate.WIDTH - (window.activeMode.MAIN_PIN_WIDTH / 2)
   };
 
-  var mainPin = window.inactiveMode.mainPin;
+  var mainPinElement = window.inactiveMode.mainPinElement;
 
   function onClickPin(evt) {
     evt.preventDefault();
     var target = evt.currentTarget;
 
-    var startCoords = {
-      x: evt.clientX,
-      y: evt.clientY
+    var StartCoords = {
+      X: evt.clientX,
+      Y: evt.clientY
     };
     // перемещения еще нет
     var dragged = false;
@@ -44,37 +44,37 @@
       // перемещение сработало
       dragged = true;
 
-      var shift = {
-        x: startCoords.x - moveEvt.clientX,
-        y: startCoords.y - moveEvt.clientY
+      var Shift = {
+        X: StartCoords.X - moveEvt.clientX,
+        Y: StartCoords.Y - moveEvt.clientY
       };
 
       // переписываю изначальные кординаты при переемещени
-      startCoords = {
-        x: moveEvt.clientX,
-        y: moveEvt.clientY
+      StartCoords = {
+        X: moveEvt.clientX,
+        Y: moveEvt.clientY
       };
 
-      mainPin.style.top = mainPin.offsetTop - shift.y + 'px';
-      mainPin.style.left = mainPin.offsetLeft - shift.x + 'px';
+      mainPinElement.style.top = mainPinElement.offsetTop - Shift.Y + 'px';
+      mainPinElement.style.left = mainPinElement.offsetLeft - Shift.X + 'px';
 
       if (parseInt(target.style.left, 10) < XCoordinate.MIN) {
         target.style.left = XCoordinate.MIN + 'px';
-        mainPin.style.left = XCoordinate.MIN;
+        mainPinElement.style.left = XCoordinate.MIN;
       } else if (parseInt(target.style.left, 10) > XCoordinate.MAX) {
         target.style.left = XCoordinate.MAX + 'px';
-        mainPin.style.left = XCoordinate.MAX;
+        mainPinElement.style.left = XCoordinate.MAX;
       }
 
       if (parseInt(target.style.top, 10) < YCoordinate.MIN) {
         target.style.top = YCoordinate.MIN + 'px';
-        mainPin.style.top = YCoordinate.MIN;
+        mainPinElement.style.top = YCoordinate.MIN;
       } else if (parseInt(target.style.top, 10) > YCoordinate.MAX) {
         target.style.top = YCoordinate.MAX + 'px';
-        mainPin.style.top = YCoordinate.MAX;
+        mainPinElement.style.top = YCoordinate.MAX;
       }
 
-      window.activeMode.changeAddressValue(Math.round(parseInt(target.style.left, 10) + (MainPinCoordinates.WIDTH / 2)), parseInt(target.style.top, 10) + MainPinCoordinates.HEIGHT + MainPinCoordinates.TIPHEIGHT);
+      window.activeMode.changeAddressValue(Math.round(parseInt(target.style.left, 10) + (MainPinCoordinate.WIDTH / 2)), parseInt(target.style.top, 10) + MainPinCoordinate.HEIGHT + MainPinCoordinate.TIPHEIGHT);
     }
 
     function onMouseUp(mouseUpEvt) {
@@ -86,9 +86,9 @@
       if (dragged) {
         var onClickPreventDefault = function (dragEvt) {
           dragEvt.preventDefault();
-          mainPin.removeEventListener('click', onClickPreventDefault);
+          mainPinElement.removeEventListener('click', onClickPreventDefault);
         };
-        mainPin.addEventListener('click', onClickPreventDefault);
+        mainPinElement.addEventListener('click', onClickPreventDefault);
       }
 
     }
@@ -98,17 +98,17 @@
   }
 
   function onActivePin() {
-    mainPin.addEventListener('mousedown', onClickPin);
+    mainPinElement.addEventListener('mousedown', onClickPin);
   }
 
   function deleteActivePin() {
-    mainPin.removeEventListener('mousedown', onClickPin);
+    mainPinElement.removeEventListener('mousedown', onClickPin);
   }
 
   // Экспорт данных из модуля
-  window.map = {
+  window.mapElement = {
     onActivePin: onActivePin,
-    MainPinCoordinates: MainPinCoordinates,
+    MainPinCoordinate: MainPinCoordinate,
     deleteActivePin: deleteActivePin
   };
 })();

@@ -1,51 +1,51 @@
 'use strict';
 (function () {
-  var selectRoom = document.querySelector('#room_number');
-  var selectGuestsAll = document.querySelector('#capacity');
-  var selectGuests = document.querySelectorAll('#capacity option');
+  var selectRoomElement = document.querySelector('#room_number');
+  var selectGuestAllElement = document.querySelector('#capacity');
+  var selectGuestElement = document.querySelectorAll('#capacity option');
 
-  var selectType = document.querySelector('#type');
-  var selectPrice = document.querySelector('#price');
+  var selectTypeElement = document.querySelector('#type');
+  var selectPriceElement = document.querySelector('#price');
 
-  var selectTime = document.querySelector('.ad-form__element--time').querySelectorAll('select');
+  var selectTimeElement = document.querySelector('.ad-form__element--time').querySelectorAll('select');
 
-  var typesOfTime = {
+  var typeOfTimeElement = {
     timein: document.querySelector('#timein'),
     timeout: document.querySelector('#timeout')
   };
 
-  var form = document.querySelector('.ad-form');
-  var map = document.querySelector('.map');
-  var filter = document.querySelector('.map__filters');
-  var addFormButton = document.querySelector('.ad-form__submit');
-  var resetFormButton = document.querySelector('.ad-form__reset');
+  var formElement = document.querySelector('.ad-form');
+  var mapElement = document.querySelector('.map');
+  var filterElement = document.querySelector('.map__filters');
+  var addFormButtonElement = document.querySelector('.ad-form__submit');
+  var resetFormButtonElement = document.querySelector('.ad-form__reset');
 
   var DefaultCoordinate = {
     X: 570,
     Y: 375
   };
 
-  var inputs = form.querySelectorAll('input');
+  var inputs = formElement.querySelectorAll('input');
 
   // выбор комнаты и блокировка неподходящих значений количества гостей
   function onSelectRoom(evt) {
     if (evt) {
       var count = evt.target.value;
     } else {
-      count = (selectRoom.querySelector('option[selected]')).value;
+      count = (selectRoomElement.querySelector('option[selected]')).value;
     }
 
-    selectGuests.forEach(function (option) {
+    selectGuestElement.forEach(function (option) {
       option.remove();
       if (option.value !== '0' && Number(option.value) <= Number(count)) {
-        selectGuestsAll.appendChild(option);
+        selectGuestAllElement.appendChild(option);
       }
 
       if (count === '100') {
-        selectGuests.forEach(function (element) {
+        selectGuestElement.forEach(function (element) {
           element.remove();
         });
-        selectGuestsAll.appendChild(option);
+        selectGuestAllElement.appendChild(option);
       }
     });
   }
@@ -54,13 +54,13 @@
     if (evt) {
       var type = evt.target.value;
     } else {
-      type = (selectType.querySelector('option[selected]')).value;
+      type = (selectTypeElement.querySelector('option[selected]')).value;
     }
 
-    for (var i = 0; i < window.card.apartmentsList.length; i++) {
-      if (window.card.apartmentsList[i].type === type) {
-        selectPrice.setAttribute('min', window.card.apartmentsList[i].minPrice);
-        selectPrice.setAttribute('placeholder', window.card.apartmentsList[i].minPrice);
+    for (var i = 0; i < window.card.apartmentList.length; i++) {
+      if (window.card.apartmentList[i].type === type) {
+        selectPriceElement.setAttribute('min', window.card.apartmentList[i].minPrice);
+        selectPriceElement.setAttribute('placeholder', window.card.apartmentList[i].minPrice);
         break;
       }
     }
@@ -69,45 +69,45 @@
   function onSelectTime(evt) {
     switch (evt.currentTarget.id) {
       case 'timein':
-        typesOfTime.timeout.value = evt.target.value;
+        typeOfTimeElement.timeout.value = evt.target.value;
         break;
       case 'timeout':
-        typesOfTime.timein.value = evt.target.value;
+        typeOfTimeElement.timein.value = evt.target.value;
         break;
     }
   }
 
   function onBlockPage() {
-    form.reset();
-    filter.reset();
+    formElement.reset();
+    filterElement.reset();
     window.photos.delete();
     onSelectType();
     onSelectRoom();
-    filter.disabled = true;
-    map.classList.add('map--faded');
-    form.classList.add('ad-form--disabled');
+    filterElement.disabled = true;
+    mapElement.classList.add('map--faded');
+    formElement.classList.add('ad-form--disabled');
     window.pins.delete();
     window.card.remove();
     window.inactiveMode.disabledAllFildset();
-    window.inactiveMode.mainPin.style.left = DefaultCoordinate.X + 'px';
-    window.inactiveMode.mainPin.style.top = DefaultCoordinate.Y + 'px';
+    window.inactiveMode.mainPinElement.style.left = DefaultCoordinate.X + 'px';
+    window.inactiveMode.mainPinElement.style.top = DefaultCoordinate.Y + 'px';
     window.activeMode.onDisable(document.querySelectorAll('.map__filter'), true);
     window.activeMode.onDisable(document.querySelectorAll('.map__checkbox'), true);
     window.activeMode.changeCursor(document.querySelectorAll('.map__filter'), 'default');
     window.activeMode.changeCursor(document.querySelectorAll('.map__feature'), 'default');
-    addFormButton.disabled = true;
-    resetFormButton.disabled = true;
+    addFormButtonElement.disabled = true;
+    resetFormButtonElement.disabled = true;
     window.activeMode.isActivePage = false;
 
     inputs.forEach(function (input) {
       input.style.border = '';
     });
-    window.map.deleteActivePin();
+    window.mapElement.deleteActivePin();
   }
 
   onBlockPage();
 
-  function onCheckValidity() {
+  function onCheckValidityClick() {
 
     // Пройдёмся по всем полям
     for (var i = 0; i < inputs.length; i++) {
@@ -119,26 +119,26 @@
         input.style.border = '2px solid red';
       }
     }
-    addFormButton.removeEventListener('click', onCheckValidity);
+    addFormButtonElement.removeEventListener('click', onCheckValidityClick);
   }
 
-  function submitDataToServer(evt) {
+  function onsubmitDataToServer(evt) {
     evt.preventDefault();
-    window.serverRequest.postData(new FormData(form), window.activeMode.showSuccessMessage, window.activeMode.showErrorMessage);
+    window.serverRequest.postData(new FormData(formElement), window.activeMode.showSuccessMessage, window.activeMode.showErrorMessage);
     onBlockPage();
   }
 
-  selectRoom.addEventListener('change', onSelectRoom);
-  selectType.addEventListener('change', onSelectType);
-  selectTime.forEach(function (time) {
+  selectRoomElement.addEventListener('change', onSelectRoom);
+  selectTypeElement.addEventListener('change', onSelectType);
+  selectTimeElement.forEach(function (time) {
     time.addEventListener('change', onSelectTime);
   });
-  resetFormButton.addEventListener('click', onBlockPage);
-  addFormButton.addEventListener('click', onCheckValidity);
-  form.addEventListener('submit', submitDataToServer);
+  resetFormButtonElement.addEventListener('click', onBlockPage);
+  addFormButtonElement.addEventListener('click', onCheckValidityClick);
+  formElement.addEventListener('submit', onsubmitDataToServer);
 
   // Экспорт функций модуля
-  window.form = {
+  window.formElement = {
     onSelectRoom: onSelectRoom,
     onSelectType: onSelectType,
     onBlockPage: onBlockPage

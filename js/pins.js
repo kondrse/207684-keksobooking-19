@@ -3,19 +3,19 @@
 (function () {
   var WIDTH_PIN = 50;
   var HEIGHT_PIN = 70;
-  var pinTemplate = document.querySelector('#pin').content.querySelector('.map__pin');
-  var allPins;
+  var pinTemplateElement = document.querySelector('#pin').content.querySelector('.map__pin');
+  var allPin;
 
   // генерируем клон из шаблона
   function renderPin(pin) {
-    var pinClone = pinTemplate.cloneNode(true);
+    var pinClone = pinTemplateElement.cloneNode(true);
     pinClone.style = 'left: ' + (pin.location.x - (WIDTH_PIN / 2)) + 'px; top: ' + (pin.location.y - HEIGHT_PIN) + 'px;';
     pinClone.querySelector('img').src = pin.author.avatar;
     pinClone.querySelector('img').alt = pin.offer.title;
     return pinClone;
   }
 
-  var mapPinsWrapper = document.querySelector('.map__pins');
+  var mapPinWrapperElement = document.querySelector('.map__pins');
   // все метки на карте
   var fragment = document.createDocumentFragment();
 
@@ -24,13 +24,13 @@
     for (var i = 0; i < posters.length; i++) {
       fragment.appendChild(renderPin(posters[i]));
     }
-    mapPinsWrapper.appendChild(fragment);
+    mapPinWrapperElement.appendChild(fragment);
   }
 
   // удаление всех меток на карте
   function deletePins() {
-    allPins = document.querySelectorAll('.map__pin:not(.map__pin--main)');
-    allPins.forEach(function (pin) {
+    allPin = document.querySelectorAll('.map__pin:not(.map__pin--main)');
+    allPin.forEach(function (pin) {
       pin.remove();
     });
   }
